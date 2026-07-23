@@ -233,7 +233,7 @@ if [ "$KSU" = "KSUN" ]; then
 fi
 
 if [ "$KSU_COMPAT" = "true" ]; then
-  VARIANT="Compat+${VARIANT}"
+  VARIANT="Compat+NoLTO+${VARIANT}"
 fi
 
 # Replace Placeholder in zip name

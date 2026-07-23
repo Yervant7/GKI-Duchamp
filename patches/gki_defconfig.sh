@@ -207,6 +207,10 @@ CONFIG_IP6_NF_MATCH_HL=y
 CONFIG_BBG=y
 EOF
 
+if [ "$KSU_COMPAT" = "true" ]; then
+  LTO="noneLTO"
+fi
+
 case "$LTO" in
   thinLTO)
     echo "🔥 ThinLTO optimizations enabled"
