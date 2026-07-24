@@ -272,8 +272,6 @@ MAKE_ARGS=(
   ARCH=arm64
   CROSS_COMPILE=aarch64-linux-gnu-
   CROSS_COMPILE_COMPAT=arm-linux-gnueabi-
-  CC="ccache clang"
-  CXX="ccache clang++"
   -j$(nproc --all)
   O=$OUTDIR
 )
@@ -337,7 +335,7 @@ fi
 
 # Build the actual kernel
 log "Building kernel..."
-make ${MAKE_ARGS[@]}
+make ${MAKE_ARGS[@]} CC="ccache clang" CXX="ccache clang++"
 
 # Check KMI Function symbol
 $KMI_CHECK "$KSRC/android/abi_gki_aarch64.stg" "$MODULE_SYMVERS" || true
