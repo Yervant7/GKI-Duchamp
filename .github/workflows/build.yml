@@ -164,11 +164,13 @@ jobs:
           sudo apt-get install -y ccache gh bc bison flex libssl-dev libelf-dev dwarves cpio
           pip install lxml
 
-      - name: Cache ccache
-        uses: actions/cache@v4
+      - name: Cache ccache + LTO
+        uses: actions/cache@v6
         id: ccache-cache
         with:
-          path: ~/.ccache
+          path: |
+            ~/.ccache
+            /dev/shm/thinlto-cache
           key: ccache-${{ matrix.name }}-${{ github.run_id }}
           restore-keys: ccache-${{ matrix.name }}
 

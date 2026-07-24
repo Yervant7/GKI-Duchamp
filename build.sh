@@ -97,11 +97,13 @@ export PATH="${CLANG_BIN}:$PATH"
 
 # ccache configuration
 export CCACHE_DIR="$HOME/.ccache"
+export CCACHE_BASEDIR="$WORKDIR"
+export CCACHE_NOHARDLINK=true
+export CCACHE_COMPILERCHECK=content
 export CC="ccache clang"
 export CXX="ccache clang++"
-export CCACHE_BASEDIR="$WORKDIR"
-export CCACHE_COMPILERCHECK=content
 
+ccache --zero-stats
 ccache --max-size=5G
 ccache --set-config=sloppiness="pch_defines,time_macros,file_macro,include_file_mtime,include_file_ctime"
 ccache --set-config=hash_dir=false
@@ -261,15 +263,32 @@ export KBUILD_BUILD_USER="$USER"
 export KBUILD_BUILD_HOST="$HOST"
 export KBUILD_BUILD_TIMESTAMP=$(git -C $KSRC log -1 --format=%cd --date=format-local:'%a %b %d %T %z %Y')
 export KCFLAGS="-w"
+
+LINK_CACHE_PATH="/dev/shm/thinlto-cache"
+LINKER_SHIM="/tmp/clang-lto-linker"
 MAKE_ARGS=(
   LLVM=1
   LLVM_IAS=1
   ARCH=arm64
   CROSS_COMPILE=aarch64-linux-gnu-
   CROSS_COMPILE_COMPAT=arm-linux-gnueabi-
+  CC="ccache clang"
+  CXX="ccache clang++"
   -j$(nproc --all)
   O=$OUTDIR
 )
+
+if [ "${LTO:-}" = "thinLTO" ]; then
+    log "ThinLTO cache enabled"
+    mkdir -p "$LINK_CACHE_PATH"
+    cat > "$LINKER_SHIM" << SHIM
+#!/usr/bin/env bash
+JOBCOUNT=\$(( \$(nproc --all) / 2 ))
+exec ld.lld "\$@" --thinlto-cache-dir="$LINK_CACHE_PATH" --thinlto-jobs=\$JOBCOUNT
+SHIM
+    chmod +x "$LINKER_SHIM"
+    MAKE_ARGS+=(LD="$LINKER_SHIM" HOSTLD="$LINKER_SHIM")
+fi
 
 KERNEL_IMAGE="$OUTDIR/arch/arm64/boot/Image"
 MODULE_SYMVERS="$OUTDIR/Module.symvers"
