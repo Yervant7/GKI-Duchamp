@@ -273,7 +273,7 @@ MAKE_ARGS=(
   CROSS_COMPILE=aarch64-linux-gnu-
   CROSS_COMPILE_COMPAT=arm-linux-gnueabi-
   -j$(nproc --all)
-  O=$OUTDIR
+  O="$OUTDIR"
 )
 
 if [ "$CLEAN_LTO_CACHE" = "true" ]; then

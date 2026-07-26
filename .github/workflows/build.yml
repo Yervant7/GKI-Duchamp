@@ -9,8 +9,6 @@ on:
         type: string
       KSU_SUSFS:
         type: string
-      LAST_BUILD:
-        type: string
       STATUS:
         type: string
       TEST:
@@ -187,7 +185,6 @@ jobs:
           KSU: ${{ matrix.KSU }}
           KSU_COMPAT: ${{ matrix.KSU_COMPAT }}
           KSU_SUSFS: ${{ matrix.KSU_SUSFS }}
-          LAST_BUILD: ${{ inputs.LAST_BUILD }}
           TODO: ${{ inputs.TODO }}
           STATUS: ${{ inputs.STATUS }}
           TEST: ${{ inputs.TEST }}
