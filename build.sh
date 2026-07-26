@@ -276,6 +276,11 @@ MAKE_ARGS=(
   O=$OUTDIR
 )
 
+if [ "$CLEAN_LTO_CACHE" = "true" ]; then
+  rm -rf "$LINK_CACHE_PATH"
+  log "ThinLTO cache removed"
+fi
+
 if [ "${LTO:-}" = "thinLTO" ]; then
     log "ThinLTO cache enabled"
     mkdir -p "$LINK_CACHE_PATH"
