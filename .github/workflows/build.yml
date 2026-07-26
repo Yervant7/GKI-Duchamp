@@ -81,6 +81,10 @@ on:
         type: boolean
         default: false
 
+      DROIDSPACES:
+        description: "Enable droidspaces-oss support"
+        type: boolean
+        default: false
 
 env:
   MAN_DISABLE: true
@@ -189,7 +193,8 @@ jobs:
           STATUS: ${{ inputs.STATUS }}
           TEST: ${{ inputs.TEST }}
           LTO: ${{ inputs.LTO }}
-          CLEAN_LTO_CACHE: ${{ inputs.CLEAN_LTO_CACHE }} 
+          CLEAN_LTO_CACHE: ${{ inputs.CLEAN_LTO_CACHE }}
+          DROIDSPACES: ${{ inputs.DROIDSPACES }}
           BUILD_NAME: ${{ matrix.name }}
           RUN_NUM: -r${{ github.run_number }}
         run: |
@@ -328,12 +333,18 @@ jobs:
               echo ">This is empty testing release don't download/install anything from here!"
               echo ""
             fi
+            if [ "${{ inputs.DroidSpaces }}" = "true" ]; then
+              DROIDSPACES_STATUS="Enabled"
+            else
+              DROIDSPACES_STATUS="Disabled"
+            fi
             cat << EOF
             ### 📢 ${{ env.RELEASE_NAME }}
 
             **Build Information:**
             - 🐧 **Kernel:** ${{ env.RELEASE_NAME }}
             - 🔥 **LTO optimizations:** ${{ inputs.LTO }}
+            - 🐳 **DroidSpaces:** $DROIDSPACES_STATUS
             - 🔖 **Version:** ${{ env.LINUX_VERSION }} (android14-6.1-lts)
             - 📦 **Variants:**
             $(echo "$VARIANTS" | sed 's/^/  - /')

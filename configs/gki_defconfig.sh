@@ -3,6 +3,10 @@
 # Define target defconfig location
 DEFCONFIG="arch/arm64/configs/gki_defconfig"
 
+function apply_config(){
+  cat "$1" >> "$2"
+}
+
 if [ "$KSU" != "no" ]; then
   # Base KSU Config & Dependencies
   echo "⚙️ Added KSU configuration"
@@ -230,6 +234,11 @@ EOF
     echo "ℹ️ LTO disabled or not specified"
     ;;
 esac
+
+if [ "$DROIDSPACES" = "true" ]; then
+  echo "🐳 DroidSpaces support enabled"
+  apply_config "$WORKDIR/configs" "$DEFCONFIG"
+fi
 
 if [ "$KSU_COMPAT" != "true" ]; then
   echo "🔧 Disable useless debugging configs for performance and resources"

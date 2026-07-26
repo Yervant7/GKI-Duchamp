@@ -123,6 +123,11 @@ log "BBG included"
 wget -qO- "https://github.com/vc-teahouse/Baseband-guard/raw/main/setup.sh" | bash
 sed -i '/^config LSM$/,/^help$/{ /^[[:space:]]*default/ { /baseband_guard/! s/selinux/selinux,baseband_guard/ } }' "security/Kconfig"
 
+if [ "$DROIDSPACES" = "true" ]; then
+  log "Applying DroidSpaces sysvipc patch"
+  patch -p1 --fuzz=3 < "$KERNEL_PATCHES/droidspaces/001.GKI-below-6.12-fix_sysvipc_kabi_6_7_8.patch"
+fi
+
 if [ "$KSU" = "SKSU" ]; then
   log "SukiSU-Ultra included"
   if susfs_included; then
@@ -243,7 +248,7 @@ AK3_ZIP_NAME=${AK3_ZIP_NAME//KVER/$LINUX_VERSION}
 AK3_ZIP_NAME=${AK3_ZIP_NAME//VARIANT/$VARIANT}
 
 log "Patching custom configs..."
-source $WORKDIR/patches/gki_defconfig.sh
+source "$WORKDIR/configs/gki_defconfig.sh"
 
 # set localversion
 if [ "${TODO:-kernel}" = "kernel" ]; then
