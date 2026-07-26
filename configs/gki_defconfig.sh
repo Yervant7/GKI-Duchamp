@@ -237,7 +237,7 @@ esac
 
 if [ "$DROIDSPACES" = "true" ]; then
   echo "🐳 DroidSpaces support enabled"
-  apply_config "$WORKDIR/configs" "$DEFCONFIG"
+  apply_config "$WORKDIR/configs/droidspaces.config" "$DEFCONFIG"
 fi
 
 if [ "$KSU_COMPAT" != "true" ]; then
