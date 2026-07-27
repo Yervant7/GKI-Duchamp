@@ -103,6 +103,7 @@ jobs:
 
           if [[ "${{ github.event.inputs.BUILD_VANILLA }}" == "true" ]]; then
             ENTRIES="${ENTRIES}{\"name\":\"Vanilla\",\"KSU\":\"no\",\"KSU_COMPAT\":\"false\",\"KSU_SUSFS\":\"false\"},"
+            ENTRIES="${ENTRIES}{\"name\":\"Vanilla+NoLTO\",\"KSU\":\"vnlto\",\"KSU_COMPAT\":\"false\",\"KSU_SUSFS\":\"false\"},"
           fi
 
           if [[ "${{ github.event.inputs.BUILD_KSU }}" == "true" ]]; then

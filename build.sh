@@ -62,6 +62,7 @@ case "$KSU" in
   "KSU") VARIANT="KernelSU" ;;
   "KSUN") VARIANT="KernelSU-Next" ;;
   "no") VARIANT="Vanilla" ;;
+  "vnlto") VARIANT="Vanilla+NoLTO" ;;
   *) VARIANT="Vanilla" ;;
 esac
 susfs_included && VARIANT+="+SuSFS"

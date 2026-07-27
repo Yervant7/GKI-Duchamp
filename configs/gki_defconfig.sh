@@ -211,7 +211,7 @@ CONFIG_IP6_NF_MATCH_HL=y
 CONFIG_BBG=y
 EOF
 
-if [ "$KSU_COMPAT" = "true" ]; then
+if [ "$KSU_COMPAT" = "true" ] || [ "$KSU" = "vnlto" ]; then
   LTO="noneLTO"
 fi
 
