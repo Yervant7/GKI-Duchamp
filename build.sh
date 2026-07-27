@@ -123,6 +123,12 @@ log "BBG included"
 wget -qO- "https://github.com/vc-teahouse/Baseband-guard/raw/main/setup.sh" | bash
 sed -i '/^config LSM$/,/^help$/{ /^[[:space:]]*default/ { /baseband_guard/! s/selinux/selinux,baseband_guard/ } }' "security/Kconfig"
 
+if [ "$KSU" = "no" ]; then
+  export DROIDSPACES="false"
+  log "DroidSpaces doesn't supported in vanilla builds"
+  VARIANT+="+NoDS"
+fi
+
 if [ "$DROIDSPACES" = "true" ]; then
   log "Applying DroidSpaces sysvipc patch"
   patch -p1 --fuzz=3 < "$KERNEL_PATCHES/droidspaces/001.GKI-below-6.12-fix_sysvipc_kabi_6_7_8.patch"
