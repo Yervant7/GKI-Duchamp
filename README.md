@@ -8,11 +8,11 @@
 [![Latest Release](https://img.shields.io/github/v/release/ahmed-alnassif/GKI-Duchamp?label=Latest%20Release&color=00aa00)](https://github.com/ahmed-alnassif/GKI-Duchamp/releases)
 [![Downloads](https://img.shields.io/github/downloads/ahmed-alnassif/GKI-Duchamp/total?label=Downloads&color=00aa00)](https://github.com/ahmed-alnassif/GKI-Duchamp/releases)
 [![GitHub License](https://img.shields.io/github/license/ahmed-alnassif/GKI-Duchamp?logo=gnu)](/LICENSE)
-![KernelSU](https://img.shields.io/badge/KernelSU-built--in-success)
+[![KernelSU](https://img.shields.io/badge/KernelSU-built--in-success)](https://github.com/tiann/KernelSU)
 [![SukiSU Ultra](https://img.shields.io/badge/SukiSU--Ultra-built--in-success)](https://github.com/SukiSU-Ultra/SukiSU-Ultra)
-![Wild KSU](https://img.shields.io/badge/Wild--KSU-built--in-success)
-![KernelSU Next](https://img.shields.io/badge/KernelSU--Next-built--in-success)
-![Managers](https://img.shields.io/badge/Managers-multiple-success)
+![ReSukiSU](https://img.shields.io/badge/ReSukiSU-built--in-success)
+[![KernelSU Next](https://img.shields.io/badge/KernelSU--Next-built--in-success)](https://github.com/KernelSU-Next/KernelSU-Next)
+[![Managers](https://img.shields.io/badge/Managers-multiple-success)](https://github.com/ahmed-alnassif/GKI-Duchamp/releases)
 [![SUSFS](https://img.shields.io/badge/SUSFS-Integrated-orange)](https://gitlab.com/simonpunk/susfs4ksu)
 
 A feature-rich Generic Kernel Image (GKI) kernel built for the **Poco X6 Pro (Duchamp)** and compatible with any device running a **6.1.xx-android14** GKI kernel. Designed to offer maximum flexibility, it provides multiple variants to suit your specific needs, whether you prioritize root management, system integrity, or performance.
@@ -61,7 +61,7 @@ A feature-rich Generic Kernel Image (GKI) kernel built for the **Poco X6 Pro (Du
     - Memory prefetch optimizations for copy operations
 
 *   **🔧 Multiple Variants:** Choose the configuration that fits your needs:
-    - **Root solutions:** KernelSU, KernelSU Next, SukiSU Ultra, Wild KSU, or Vanilla (no root)
+    - **Root solutions:** KernelSU, KernelSU Next, SukiSU Ultra, ReSukiSU, or Vanilla (no root)
     - **Manager flexibility:** Multiple-Manager variants let you use your preferred manager app
 
 *   **🛡️ SUSFS Integration:** Advanced kernel-level hiding and spoofing capabilities (available in dedicated variants)
@@ -84,8 +84,9 @@ Enhance your device with these companion modules:
 
 | Module | Description |
 |--------|-------------|
-| [**Thermal Manager**](https://github.com/ahmed-alnassif/Thermal-Manager) | Fixes the thermal mode/profile reset issue on Poco X6 Pro. Monitor and force-persist your chosen mode: **Balanced** ⚖️, **Battery Saver** 🔋, **Performance** ⚡, or **Gaming** 🎮. Includes **WebUI** for instant switching, auto battery saver when screen off, and mode persistence after reboot. |
-| [**DSP AudioFix**](https://github.com/ahmed-alnassif/DSP-AudioFix) | Simple fix for distorted audio on Poco X6 Pro and similar Xiaomi/MediaTek devices with Awinic smart amps. |
+| [**GPU Unlocker** (HyperOS Only)](https://github.com/ahmed-alnassif/GPU-Unlocker) | Unlock the Mali-G615 MC6 GPU from 701 MHz to full 1.4 GHz on POCO X6 Pro HyperOS. |
+| [**Thermal Manager**  (AOSP Only)](https://github.com/ahmed-alnassif/Thermal-Manager) | Fixes the thermal mode/profile reset issue on Poco X6 Pro. Monitor and force-persist your chosen mode: **Balanced** ⚖️, **Battery Saver** 🔋, **Performance** ⚡, or **Gaming** 🎮. Includes **WebUI** for instant switching, auto battery saver when screen off, and mode persistence after reboot. |
+| [**DSP AudioFix**  (AOSP Only)](https://github.com/ahmed-alnassif/DSP-AudioFix) | Simple fix for distorted audio on Poco X6 Pro and similar Xiaomi/MediaTek devices with Awinic smart amps. |
 
 >[!TIP]
 >Both modules are designed specifically for Poco X6 Pro hardware quirks and work seamlessly with any GKID kernel variant.
@@ -101,5 +102,3 @@ Find the latest builds for all variants in the [Releases](https://github.com/ahm
 
 ## 🐧 Kernel Source
 **GitHub:** [ahmed-alnassif/GKI-Duchamp-6.1](https://github.com/ahmed-alnassif/GKI-Duchamp-6.1)
-
-[![Star History Chart](https://api.star-history.com/svg?repos=ahmed-alnassif/GKI-Duchamp&type=date&legend=top-left)](https://www.star-history.com/#star-history/star-history&type=date&legend=top-left)
