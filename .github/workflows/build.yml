@@ -374,6 +374,7 @@ jobs:
             - **Faster memory ops** → up to 50% faster string/memory handling
             - **mq-deadline I/O** → low-latency on UFS 4.0 storage
             - **CPU governors:** schedutil + ondemand → efficient & responsive
+            - **NTSync driver** → faster Windows games/apps on Winlator/GameHub
 
             **🌐 Network**
             - **TCP BBRv3 + Westwood+** → better WiFi/mobile data speeds
