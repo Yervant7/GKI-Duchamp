@@ -331,7 +331,7 @@ jobs:
             {
             if [ "${{ inputs.TEST }}" = "yes"  ];then
               echo ">[!warning]"
-              echo ">This is empty testing release don't download/install anything from here!"
+              echo ">This is an empty testing release — please do not download or install!"
               echo ""
             fi
             if [ "${{ inputs.DroidSpaces }}" = "true" ]; then
@@ -353,40 +353,79 @@ jobs:
             - ⚙️ **Compiler:** ${{ env.COMPILER_STRING }}
 
             >[!Important]
-            >- Got a bootloop? Switch to a Compat variant.
+            >- **Bootloop?** Flash a **Compat** variant first.
+            >- **Issues?** Check [Discussions](https://github.com/ahmed-alnassif/GKI-Duchamp/discussions) before opening an issue.
 
-            **Performance & Efficiency Tweaks**
-            Balanced optimizations for smoother UI, better multitasking & gaming on Poco X6 Pro (and similar **6.1.xx-android14** GKI kernel devices):
+            ---
 
-            - Timer frequency **HZ=300** → noticeably lower input lag & snappier feel
-            - CPU governors: **schedutil** + **ondemand** → efficient & responsive scaling
-            - Modern memory: **Multi-Gen LRU (MGLRU)** enabled → huge multitasking & battery win
-            - zRAM: compressed swap with **LZ4** + **writeback** + tracking → more usable RAM in heavy use
-            - I/O scheduler: **mq-deadline** as default → low-latency on fast UFS 4.0 storage
-            - Networking: **TCP BBRv3** + **TCP Westwood+** + **FQ** + **ECN** + **IPv6 HL support** + **TCP_NODELAY forced** → better speed on WiFi/mobile data
-            - IP Set full support + IPv6 NAT → better tethering & VPN performance
-            - F2FS tuning: reduced GC sleep (50ms), enlarged fsync blocks, reduced congestion timeout → smoother I/O
-            - ext4 commit age extended to 30s → fewer disk writes, better battery
-            - Memory optimizations: faster memcpy, memcmp, memset (up to 50%) + 3x faster integer sqrt → lower CPU overhead
-            - File struct 8-byte aligned + clear page 16-byte aligned → better cache performance
-            - Freeze timeout reduced 20s→1s + wakelock cap 500ms + minimized alarm wakeup → less battery drain
-            - Scheduler: efficient CPU scan order + DynamIQ cache buddy disabled + branch prediction hints → smarter core selection
-            - Unicode filename validation → prevents crashes from invalid UTF-8 on vfat/exfat
-            - Silenced IRQ & system log spam → cleaner dmesg, easier debugging
-            - BBG (baseband-guard) a lightweight **LSM (Linux Security Module)** for the Android kernel, designed to block unauthorized writes to critical partitions/device nodes at the system level. This reduces the risk of malicious or accidental tampering with critical components such as the baseband and boot chain.
+            ### 💬 Community & Support
+            - **Have questions?** Start a [Discussion](https://github.com/ahmed-alnassif/GKI-Duchamp/discussions)
+            - **Found a bug?** Open an [Issue](https://github.com/ahmed-alnassif/GKI-Duchamp/issues) with logs
+            - **Enjoying the kernel?** ⭐ Star the [repo](https://github.com/ahmed-alnassif/GKI-Duchamp)!
+
+            ---
+
+            **⚡ Performance & Battery Optimizations**
+            Engineered for smoother UI, better multitasking & gaming on Poco X6 Pro:
+
+            **⚡ Performance**
+            - **300Hz timer** → lower input lag, snappier feel
+            - **MGLRU** → better multitasking & battery life
+            - **Faster memory ops** → up to 50% faster string/memory handling
+            - **mq-deadline I/O** → low-latency on UFS 4.0 storage
+            - **CPU governors:** schedutil + ondemand → efficient & responsive
+
+            **🌐 Network**
+            - **TCP BBRv3 + Westwood+** → better WiFi/mobile data speeds
+            - **TCP_NODELAY forced** → reduced latency
+            - **IPv6 NAT + IP Set** → better tethering & VPN
+
+            **🔋 Battery Life**
+            - **Wakelock cap:** 500ms → prevents battery drain
+            - **Freeze timeout:** 20s → 1s → faster deadlock detection
+            - **ext4 commit age:** 30s → fewer disk writes
+            - **Minimized alarm wakeups** → less standby drain
+
+            **💾 Storage & Filesystem**
+            - **F2FS tuning:** reduced GC sleep (50ms) → smoother I/O
+            - **ext4 optimization** → extended commit age
+
+            **🛡️ Security**
+            - **Baseband Guard (BBG)** → blocks unauthorized writes to critical partitions
+
+            ---
+
+            ### 📱 Recommended Companion Modules
+            Enhance your Poco X6 Pro with these modules designed for GKID kernels:
+
+            | Module | Description | ROM |
+            |--------|-------------|-----|
+            | [**GPU Unlocker**](https://github.com/ahmed-alnassif/GPU-Unlocker) | Unlock Mali-G615 MC6 from **701MHz → 1.4GHz** (100% boost) | HyperOS |
+            | [**Thermal Manager**](https://github.com/ahmed-alnassif/Thermal-Manager) | Fix thermal mode reset. Force-persist Balanced ⚖️, Battery Saver 🔋, Performance ⚡, or Gaming 🎮. Includes WebUI. | AOSP |
+            | [**DSP AudioFix**](https://github.com/ahmed-alnassif/DSP-AudioFix) | Fix distorted audio on devices with Awinic smart amps | AOSP |
+
+            > [!Tip]
+            > **HyperOS users:** GPU Unlocker gives you a massive gaming performance boost.
+            > **AOSP users:** Thermal Manager fixes a stock bug that resets your thermal mode.
+
+            ---
 
             >[!Tip]
-            >Follow the next instructions to switch between Westwood+ and BBRv3
+            >This kernel includes **TCP BBRv3** (default) and **Westwood+** congestion control algorithms.
+            >You can switch between them - **changes are temporary and reset after reboot.**
 
-            To switch to westwood
+            **Switch to Westwood+ (better for some networks):**
             \`\`\`bash
             su -c "sysctl -w net.ipv4.tcp_congestion_control=westwood"
             \`\`\`
-            To restore BBRv3
+
+            **Restore BBRv3 (default):**
             \`\`\`bash
             su -c "sysctl -w net.ipv4.tcp_congestion_control=bbr"
             \`\`\`
-            Test both and choose the suitable one for your network.
+
+            Test both and choose the one that performs better on your network.
+            > **Note:** To make the change permanent, create a script in `/data/adb/service.d/` with the sysctl command.
 
             ---
             **Android14-6.1-LTS Kernel Changelog (last 10 commits):**
