@@ -11,7 +11,13 @@ TIMEZONE="Asia/Damascus"
 ANYKERNEL_REPO="https://github.com/ahmed-alnassif/AK3-GKID"
 
 KERNEL_DEFCONFIG="gki_defconfig"
-KERNEL_BRANCH="GKID-6.1"
+
+if [ "$NH" = "true" ]; then
+  KERNEL_BRANCH="GKID-NH"
+else
+  KERNEL_BRANCH="GKID-6.1"
+fi
+
 
 # Set timezone
 sudo timedatectl set-timezone "$TIMEZONE" || export TZ="$TIMEZONE"
@@ -135,8 +141,8 @@ if [ "$KSU" = "no" ] || [ "$KSU" = "vnlto" ]; then
   VARIANT+="+NoDS"
 fi
 
-if [ "$DROIDSPACES" = "true" ]; then
-  log "Applying DroidSpaces sysvipc patch"
+if [ "$DROIDSPACES" = "true" ] || [ "$NH" = "true" ]; then
+  log "Applying DroidSpaces/NetHunter sysvipc patch"
   patch -p1 --fuzz=3 < "$KERNEL_PATCHES/droidspaces/001.GKI-below-6.12-fix_sysvipc_kabi_6_7_8.patch"
 fi
 

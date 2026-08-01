@@ -86,6 +86,11 @@ on:
         type: boolean
         default: false
 
+      NH:
+        description: "Enable NetHunter support"
+        type: boolean
+        default: true
+
 env:
   MAN_DISABLE: true
   DEBIAN_FRONTEND: noninteractive
@@ -196,6 +201,7 @@ jobs:
           LTO: ${{ inputs.LTO }}
           CLEAN_LTO_CACHE: ${{ inputs.CLEAN_LTO_CACHE }}
           DROIDSPACES: ${{ inputs.DROIDSPACES }}
+          NH: ${{ inputs.NH }}
           BUILD_NAME: ${{ matrix.name }}
           RUN_NUM: -r${{ github.run_number }}
         run: |
@@ -339,12 +345,18 @@ jobs:
             else
               DROIDSPACES_STATUS="Disabled"
             fi
+            if [ "${{ inputs.NH }}" = "true" ]; then
+              NH_STATUS="Enabled"
+            else
+              NH_STATUS="Disabled"
+            fi
             cat << EOF
             ### 📢 ${{ env.RELEASE_NAME }}
 
             **Build Information:**
             - 🐧 **Kernel:** ${{ env.RELEASE_NAME }}
             - 🔥 **LTO optimizations:** ${{ inputs.LTO }}
+            - 🐉 **Kali NetHunter:** $NH_STATUS
             - 🐳 **DroidSpaces:** $DROIDSPACES_STATUS
             - 🔖 **Version:** ${{ env.LINUX_VERSION }} (android14-6.1-lts)
             - 📦 **Variants:**

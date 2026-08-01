@@ -56,6 +56,11 @@ if [ "$DROIDSPACES" = "true" ]; then
   apply_config "$WORKDIR/configs/droidspaces.config" "$DEFCONFIG"
 fi
 
+if [ "$NH" = "true" ]; then
+  echo "🐉 NetHunter support enabled"
+  apply_config "$WORKDIR/configs/nethunter.config" "$DEFCONFIG"
+fi
+
 if [ "$KSU_COMPAT" != "true" ]; then
   echo "🔧 Disable useless debugging configs for performance and resources"
   cat >> $DEFCONFIG <<EOF
