@@ -209,27 +209,32 @@ jobs:
           chmod +x *.sh py/*.py
           ./build.sh
 
-      - name: Extract rtw88 modules
+      - name: Extract wireless modules
         if: ${{ inputs.NH }}
         run: |
-          echo "Extracting rtw88 modules..."
+          echo "Extracting wireless modules..."
 
-          mkdir -p rtw_modules
+          mkdir -p wireless_modules
 
           if [ -d "out/drivers/net/wireless/realtek/rtw88" ]; then
-            find out/drivers/net/wireless/realtek/rtw88 -name "*.ko" -exec cp {} rtw_modules/ \;
+
+          for mod in rfkill cfg80211 mac80211; do
+            find out/ -iname "$mod*.ko" -exec cp {} wireless_modules/ \; 2>/dev/null || true
+          done
+
+            find out/drivers/net/wireless/realtek/rtw88 -name "*.ko" -exec cp {} wireless_modules/ \;
             
-            if [ -n "$(ls -A rtw_modules 2>/dev/null)" ]; then
+            if [ -n "$(ls -A wireless_modules 2>/dev/null)" ]; then
                     echo "Modules found:"
-                    ls -la rtw_modules/
+                    ls -la wireless_modules/
                     mkdir -p artifacts
-                    zip -r "artifacts/rtw88_modules-${{ env.RELEASE }}-${{ env.VARIANT }}.zip" rtw_modules/
-                    echo "rtw88_modules-${{ env.RELEASE }}-${{ env.VARIANT }}.zip created"
+                    zip -r "artifacts/wireless_modules-${{ env.RELEASE }}-${{ env.VARIANT }}.zip" wireless_modules/
+                    echo "wireless_modules-${{ env.RELEASE }}-${{ env.VARIANT }}.zip created"
             else
                     echo "No .ko files found (driver may be built-in)"
             fi
           else
-            echo "rtw88 directory not found (driver may not be built or is built-in)"
+            echo "wireless directory not found (driver may not be built or is built-in)"
           fi
 
       - name: ccache stats
