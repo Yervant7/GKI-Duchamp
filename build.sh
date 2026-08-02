@@ -261,6 +261,8 @@ if [ "$KSU_COMPAT" = "true" ]; then
   VARIANT="Compat+NoLTO+${VARIANT}"
 fi
 
+echo "VARIANT=$VARIANT" >> $GITHUB_ENV
+
 # Replace Placeholder in zip name
 AK3_ZIP_NAME=${AK3_ZIP_NAME//KVER/$LINUX_VERSION}
 AK3_ZIP_NAME=${AK3_ZIP_NAME//VARIANT/$VARIANT}
