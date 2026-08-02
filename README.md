@@ -18,31 +18,22 @@
 A feature-rich Generic Kernel Image (GKI) kernel built for the **Poco X6 Pro (Duchamp)** and compatible with any device running a **6.1.xx-android14** GKI kernel. Designed to offer maximum flexibility, it provides multiple variants to suit your specific needs, whether you prioritize root management, system integrity, or performance.
 
 ## ✨ Key Features
+
 *   **⚡ Performance & Efficiency Tweaks:** Extensively optimized for the Poco X6 Pro (and similar 6.1.xx-android14 devices):
 
     - Timer frequency set to **300Hz** for noticeably lower input lag and snappier feel
-
     - **Multi-Gen LRU (MGLRU)** enabled for better multitasking and battery efficiency
-
     - **Optimized memory operations** (memcpy, memcmp, memset) from ARM-optimized-routines for up to 50% faster string/memory handling
-
     - **3x faster integer square root** reducing CPU time in cpufreq calculations
-
     - Optimized **zRAM** with LZ4 compression + writeback + tracking for more and faster usable RAM under heavy loads
-
     - CPU governors: **schedutil + ondemand** for efficient yet responsive scaling
-
     - **mq-deadline I/O scheduler** tuned for low latency on UFS 4.0 storage
-
     - Network stack with **TCP BBRv3** + **TCP Westwood+** + **FQ** + **ECN** + **IPv6 HL support** + **TCP_NODELAY forced** for reduced latency and faster WiFi/mobile data speeds
-
     - **F2FS** filesystem tuning (reduced GC sleep to 50ms, enlarged fsync blocks, reduced congestion timeout)
-
     - **ext4** commit age extended to 30s for fewer disk writes
-
     - **IP Set** full support + **IPv6 NAT** for better tethering and VPN performance
-
     - **Filesystem Unicode fix** preventing crashes from invalid UTF-8 filenames on vfat/exfat
+    - **NTSync driver** for significantly faster Windows games/apps on Winlator & GameHub
 
 *   **🔋 Battery & Power Optimizations:**
     - Freeze timeout reduced from 20s to **1s** for faster deadlock detection
@@ -60,9 +51,14 @@ A feature-rich Generic Kernel Image (GKI) kernel built for the **Poco X6 Pro (Du
     - Clear page aligned to 16 bytes reducing CPU time on page allocation
     - Memory prefetch optimizations for copy operations
 
+*   **🐉 Kali NetHunter:** Full support enabled (monitor mode, packet injection, rtw88 driver). Matching **WirelessKSU** modules are provided for every variant.
+
+*   **🐳 DroidSpaces:** Full kernel support enabled for [DroidSpaces](https://github.com/ravindu644/Droidspaces-OSS) a lightweight container runtime that lets you run real Linux distributions (Ubuntu, Debian, etc.) with proper isolation and init systems (systemd/OpenRC) directly on your Android device.
+
 *   **🔧 Multiple Variants:** Choose the configuration that fits your needs:
     - **Root solutions:** KernelSU, KernelSU Next, SukiSU Ultra, ReSukiSU, or Vanilla (no root)
     - **Manager flexibility:** Multiple-Manager variants let you use your preferred manager app
+    - **LTO options:** thinLTO builds + dedicated `+NoLTO` / `Compat+NoLTO` variants
 
 *   **🛡️ SUSFS Integration:** Advanced kernel-level hiding and spoofing capabilities (available in dedicated variants)
 *   **🔒 Baseband Guard (BBG):** Lightweight LSM that blocks unauthorized writes to critical partitions and device nodes, protecting the baseband and boot chain from tampering
