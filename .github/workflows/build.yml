@@ -215,6 +215,7 @@ jobs:
           echo "Extracting wireless modules..."
           NAME="WirelessKSU"
           WKSU="modules/$NAME"
+          RPWD=$(pwd)
           mkdir -p "$WKSU/lkm"
           mkdir -p "$WKSU/system/etc/firmware/rtw88"
 
@@ -232,7 +233,8 @@ jobs:
                     echo "Modules found:"
                     ls -la $WKSU/lkm/
                     mkdir -p artifacts
-                    zip -9 -r "artifacts/$NAME-${{ env.RELEASE }}-${{ env.VARIANT }}.zip" $WKSU
+                    cd $WKSU
+                    zip -9 -r "$RPWD/artifacts/$NAME-${{ env.RELEASE }}-${{ env.VARIANT }}.zip" .
                     echo "$NAME-${{ env.RELEASE }}-${{ env.VARIANT }}.zip created"
             else
                     echo "No .ko files found (driver may be built-in)"
