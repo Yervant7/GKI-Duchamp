@@ -209,27 +209,31 @@ jobs:
           chmod +x *.sh py/*.py
           ./build.sh
 
-      - name: Extract wireless modules
+      - name: Create KernelSU module for wireless modules
         if: ${{ inputs.NH }}
         run: |
           echo "Extracting wireless modules..."
-
-          mkdir -p wireless_modules
+          NAME="WirelessKSU"
+          WKSU="modules/$NAME"
+          mkdir -p "$WKSU/lkm"
+          mkdir -p "$WKSU/system/etc/firmware/rtw88"
 
           if [ -d "out/drivers/net/wireless/realtek/rtw88" ]; then
 
           for mod in rfkill cfg80211 mac80211; do
-            find out/ -iname "$mod*.ko" -exec cp {} wireless_modules/ \; 2>/dev/null || true
+            find out/ -iname "$mod*.ko" -exec cp {} $WKSU/lkm/ \; 2>/dev/null || true
           done
 
-            find out/drivers/net/wireless/realtek/rtw88 -name "*.ko" -exec cp {} wireless_modules/ \;
+            find out/drivers/net/wireless/realtek/rtw88 -name "*.ko" -exec cp {} $WKSU/lkm/ \;
             
-            if [ -n "$(ls -A wireless_modules 2>/dev/null)" ]; then
+            if [ -n "$(ls -A $WKSU/lkm 2>/dev/null)" ]; then
+                    sed -i "s/version=.*/version=${{ env.RELEASE }}-${{ env.VARIANT }}/" "$WKSU/module.prop"
+                    cp ksrc/drivers/net/wireless/realtek/rtw88/firmware/* "$WKSU/system/etc/firmware/rtw88"
                     echo "Modules found:"
-                    ls -la wireless_modules/
+                    ls -la $WKSU/lkm/
                     mkdir -p artifacts
-                    zip -r "artifacts/wireless_modules-${{ env.RELEASE }}-${{ env.VARIANT }}.zip" wireless_modules/
-                    echo "wireless_modules-${{ env.RELEASE }}-${{ env.VARIANT }}.zip created"
+                    zip -9 -r "artifacts/$NAME-${{ env.RELEASE }}-${{ env.VARIANT }}.zip" $WKSU
+                    echo "$NAME-${{ env.RELEASE }}-${{ env.VARIANT }}.zip created"
             else
                     echo "No .ko files found (driver may be built-in)"
             fi
@@ -388,7 +392,9 @@ jobs:
             - 🐳 **DroidSpaces:** $DROIDSPACES_STATUS
             - 🔖 **Version:** ${{ env.LINUX_VERSION }} (android14-6.1-lts)
             - 📦 **Variants:**
-            $(echo "$VARIANTS" | sed 's/^/  - /')
+            $(echo "$VARIANTS" | grep -i GKID | sed 's/^/  - /')
+            - 🐉 **Kali NetHunter KernelSU modules:**
+            $(echo "$VARIANTS" |  grep -i WirelessKSU | sed 's/^/  - /')
             - 🛡️ **SuSFS:** ඞ ${{ env.SUSFS_VERSION }}
             - ⚙️ **Compiler:** ${{ env.COMPILER_STRING }}
 
