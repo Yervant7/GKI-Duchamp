@@ -385,7 +385,7 @@ jobs:
               NH_STATUS="Disabled"
             fi
             cat << EOF
-            ### 📢 ${{ env.RELEASE_NAME }}
+            ### ✨ ${{ env.RELEASE_NAME }} ✨
 
             **Build Information:**
             - 🐧 **Kernel:** ${{ env.RELEASE_NAME }}
@@ -395,7 +395,7 @@ jobs:
             - 🔖 **Version:** ${{ env.LINUX_VERSION }} (android14-6.1-lts)
             - 📦 **Variants:**
             $(echo "$VARIANTS" | grep -i GKID | sed 's/^/  - /')
-            - 🐉 **Kali NetHunter KernelSU modules:**
+            - 🐉 **Kali NetHunter KernelSU modules:** $([ "${{ inputs.NH }}" = "true" ] || echo None)
             $(echo "$VARIANTS" |  grep -i WirelessKSU | sed 's/^/  - /')
             - 🛡️ **SuSFS:** ඞ ${{ env.SUSFS_VERSION }}
             - ⚙️ **Compiler:** ${{ env.COMPILER_STRING }}
