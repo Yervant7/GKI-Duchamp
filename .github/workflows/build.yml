@@ -137,7 +137,7 @@ jobs:
 
     steps:
       - name: Checkout source
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 1
 
@@ -168,7 +168,7 @@ jobs:
           pip install lxml
 
       - name: Cache ccache + LTO
-        uses: actions/cache@v6
+        uses: actions/cache@v6.1
         id: ccache-cache
         with:
           path: |
@@ -221,7 +221,7 @@ jobs:
 
       - name: Upload environment file
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: build-env-${{ matrix.name }}-${{ github.run_number }}
           path: build-env-${{ matrix.name }}.txt
@@ -229,7 +229,7 @@ jobs:
 
       - name: Upload build artifacts
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: build-${{ matrix.name }}-${{ github.run_number }}
           path: artifacts/
@@ -241,13 +241,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download all artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           path: downloaded-artifacts
           merge-multiple: true
 
       - name: Upload combined artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: all-builds-${{ github.run_number }}
           retention-days: 7
@@ -261,12 +261,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 1
 
       - name: Download all artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           path: release-artifacts
           merge-multiple: true
@@ -467,14 +467,16 @@ jobs:
             } > release_body.md
 
       - name: Upload All Builds to release repo
-        uses: softprops/action-gh-release@v2
+        uses: ncipollo/release-action@v1.21.0
         with:
-          repository: ${{ github.repository }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           name: ${{ env.RELEASE_NAME }}
-          tag_name: ${{ env.RELEASE }}
-          prerelease: true
-          files: |
+          tag: ${{ github.RELEASE }}
+          allowUpdates: true
+          artifacts: |
             release-artifacts/*.zip
             release-artifacts/checksums.txt
             release-artifacts/checksums-md5.txt
-          body_path: release_body.md
+          makeLatest: true
+          replacesArtifacts: true
+          bodyFile: release_body.md
