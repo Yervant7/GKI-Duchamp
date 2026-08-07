@@ -12,11 +12,7 @@ ANYKERNEL_REPO="https://github.com/ahmed-alnassif/AK3-GKID"
 
 KERNEL_DEFCONFIG="gki_defconfig"
 
-if [ "$NH" = "true" ]; then
-  KERNEL_BRANCH="GKID-NH"
-else
-  KERNEL_BRANCH="GKID-6.1"
-fi
+KERNEL_BRANCH="GKID-6.1"
 
 
 # Set timezone
@@ -26,7 +22,6 @@ RELEASE="$(date +v%y.%m.%d)${RUN_NUM}"
 
 mkdir -p $RELEASE_DIR
 
-GKI_RELEASES_REPO="https://github.com/ahmed-alnassif/GKI-Duchamp"
 AK3_ZIP_NAME="$KERNEL_NAME-REL-KVER-VARIANT-BUILD_DATE.zip"
 OUTDIR="$WORKDIR/out"
 KSRC="$WORKDIR/ksrc"
@@ -35,7 +30,6 @@ KERNEL_PATCHES="$WORKDIR/kernel-patches"
 # Import functions
 source $WORKDIR/functions.sh
 
-echo "RELEASE_REPO=$(simplify_gh_url "$GKI_RELEASES_REPO")" >> $GITHUB_ENV
 echo "KERNEL_NAME=${KERNEL_NAME}${RUN_NUM}" >> $GITHUB_ENV
 echo "RELEASE_NAME=$KERNEL_NAME $RELEASE" >> $GITHUB_ENV
 echo "RELEASE=$RELEASE" >> $GITHUB_ENV
@@ -134,17 +128,6 @@ log "NTSync patches applied"
 log "BBG included"
 wget -qO- "https://github.com/vc-teahouse/Baseband-guard/raw/main/setup.sh" | bash
 sed -i '/^config LSM$/,/^help$/{ /^[[:space:]]*default/ { /baseband_guard/! s/selinux/selinux,baseband_guard/ } }' "security/Kconfig"
-
-if [ "$KSU" = "no" ] || [ "$KSU" = "vnlto" ]; then
-  export DROIDSPACES="false"
-  log "DroidSpaces doesn't supported in vanilla builds"
-  VARIANT+="+NoDS"
-fi
-
-if [ "$DROIDSPACES" = "true" ] || [ "$NH" = "true" ]; then
-  log "Applying DroidSpaces/NetHunter sysvipc patch"
-  patch -p1 --fuzz=3 < "$KERNEL_PATCHES/droidspaces/001.GKI-below-6.12-fix_sysvipc_kabi_6_7_8.patch"
-fi
 
 if [ "$KSU" = "SKSU" ]; then
   log "SukiSU-Ultra included"
@@ -416,6 +399,5 @@ if [ "$STATUS" != "BETA" ]; then
     echo "LINUX_VERSION=$LINUX_VERSION"
     echo "SUSFS_VERSION=$(curl -s "$SUSFS_URL"/raw/gki-android14-6.1/kernel_patches/include/linux/susfs.h | grep -E '^#define SUSFS_VERSION' | cut -d' ' -f3 | sed 's/"//g')"
     echo "KERNEL_NAME=$KERNEL_NAME"
-    echo "RELEASE_REPO=$(simplify_gh_url "$GKI_RELEASES_REPO")"
   ) >> $RELEASE_DIR/info.txt
 fi
