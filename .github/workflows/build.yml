@@ -81,16 +81,6 @@ on:
         type: boolean
         default: false
 
-      DROIDSPACES:
-        description: "Enable droidspaces-oss support"
-        type: boolean
-        default: false
-
-      NH:
-        description: "Enable NetHunter support"
-        type: boolean
-        default: true
-
 env:
   MAN_DISABLE: true
   DEBIAN_FRONTEND: noninteractive
@@ -155,7 +145,6 @@ jobs:
         env:
           KSU: ${{ matrix.KSU }}
           KSU_SUSFS: ${{ matrix.KSU_SUSFS }}
-          KERNEL_REPO: ${{ secrets.KERNEL_REPO }}
         run: |
           _error() {
               echo "❌ ERROR: $*"
@@ -200,49 +189,12 @@ jobs:
           TEST: ${{ inputs.TEST }}
           LTO: ${{ inputs.LTO }}
           CLEAN_LTO_CACHE: ${{ inputs.CLEAN_LTO_CACHE }}
-          DROIDSPACES: ${{ inputs.DROIDSPACES }}
-          NH: ${{ inputs.NH }}
           BUILD_NAME: ${{ matrix.name }}
           RUN_NUM: -r${{ github.run_number }}
         run: |
           export GIT_CLONE_PROTECTION_ACTIVE=false
           chmod +x *.sh py/*.py
           ./build.sh
-
-      - name: Create KernelSU module for wireless modules
-        if: ${{ inputs.NH }}
-        run: |
-          echo "Extracting wireless modules..."
-          NAME="WirelessKSU"
-          WKSU="modules/$NAME"
-          RPWD=$(pwd)
-          mkdir -p "$WKSU/lkm"
-          mkdir -p "$WKSU/system/etc/firmware/rtw88"
-
-          if [ -d "out/drivers/net/wireless/realtek/rtw88" ]; then
-
-          for mod in rfkill cfg80211 mac80211; do
-            find out/ -iname "$mod*.ko" -exec cp {} $WKSU/lkm/ \; 2>/dev/null || true
-          done
-
-            find out/drivers/net/wireless/realtek/rtw88 -name "*.ko" -exec cp {} $WKSU/lkm/ \;
-            find out/drivers/staging/r8188eu -name "*.ko" -exec cp {} $WKSU/lkm/ \;
-
-            if [ -n "$(ls -A $WKSU/lkm 2>/dev/null)" ]; then
-                    sed -i "s/version=.*/version=${{ env.RELEASE }}-${{ env.VARIANT }}/" "$WKSU/module.prop"
-                    cp ksrc/drivers/net/wireless/realtek/rtw88/firmware/* "$WKSU/system/etc/firmware/rtw88"
-                    echo "Modules found:"
-                    ls -la $WKSU/lkm/
-                    mkdir -p artifacts
-                    cd $WKSU
-                    zip -9 -r "$RPWD/artifacts/$NAME-${{ env.RELEASE }}-${{ env.VARIANT }}.zip" .
-                    echo "$NAME-${{ env.RELEASE }}-${{ env.VARIANT }}.zip created"
-            else
-                    echo "No .ko files found (driver may be built-in)"
-            fi
-          else
-            echo "wireless directory not found (driver may not be built or is built-in)"
-          fi
 
       - name: ccache stats
         if: always()
@@ -253,7 +205,6 @@ jobs:
         if: always()
         run: |
           cat > build-env-${{ matrix.name }}.txt << EOF
-          RELEASE_REPO=${{ env.RELEASE_REPO }}
           KERNEL_NAME=${{ env.KERNEL_NAME }}
           RELEASE_NAME=${{ env.RELEASE_NAME }}
           RELEASE=${{ env.RELEASE }}
@@ -375,29 +326,15 @@ jobs:
               echo ">This is an empty testing release — please do not download or install!"
               echo ""
             fi
-            if [ "${{ inputs.DroidSpaces }}" = "true" ]; then
-              DROIDSPACES_STATUS="Enabled"
-            else
-              DROIDSPACES_STATUS="Disabled"
-            fi
-            if [ "${{ inputs.NH }}" = "true" ]; then
-              NH_STATUS="Enabled"
-            else
-              NH_STATUS="Disabled"
-            fi
             cat << EOF
             ### ✨ ${{ env.RELEASE_NAME }} ✨
 
             **Build Information:**
             - 🐧 **Kernel:** ${{ env.RELEASE_NAME }}
             - 🔥 **LTO optimizations:** ${{ inputs.LTO }}
-            - 🐉 **Kali NetHunter:** $NH_STATUS
-            - 🐳 **DroidSpaces:** $DROIDSPACES_STATUS
             - 🔖 **Version:** ${{ env.LINUX_VERSION }} (android14-6.1-lts)
             - 📦 **Variants:**
             $(echo "$VARIANTS" | grep -i GKID | sed 's/^/  - /')
-            - 🐉 **Kali NetHunter KernelSU modules:** $([ "${{ inputs.NH }}" = "true" ] || echo None)
-            $(echo "$VARIANTS" |  grep -i WirelessKSU | sed 's/^/  - /')
             - 🛡️ **SuSFS:** ඞ ${{ env.SUSFS_VERSION }}
             - ⚙️ **Compiler:** ${{ env.COMPILER_STRING }}
 
@@ -532,7 +469,7 @@ jobs:
       - name: Upload All Builds to release repo
         uses: softprops/action-gh-release@v2
         with:
-          repository: ${{ env.RELEASE_REPO }}
+          repository: ${{ github.repository }}
           name: ${{ env.RELEASE_NAME }}
           tag_name: ${{ env.RELEASE }}
           prerelease: true
