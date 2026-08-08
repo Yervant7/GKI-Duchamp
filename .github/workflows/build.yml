@@ -168,7 +168,7 @@ jobs:
           pip install lxml
 
       - name: Cache ccache + LTO
-        uses: actions/cache@v6.1
+        uses: actions/cache@v6.1.0
         id: ccache-cache
         with:
           path: |
