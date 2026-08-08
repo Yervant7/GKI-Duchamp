@@ -81,6 +81,9 @@ on:
         type: boolean
         default: false
 
+permissions:
+  contents: write
+
 env:
   MAN_DISABLE: true
   DEBIAN_FRONTEND: noninteractive
