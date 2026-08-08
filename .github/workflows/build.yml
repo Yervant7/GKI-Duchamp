@@ -471,7 +471,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           name: ${{ env.RELEASE_NAME }}
-          tag: ${{ github.RELEASE }}
+          tag: ${{ env.RELEASE }}
           allowUpdates: true
           artifacts: |
             release-artifacts/*.zip
